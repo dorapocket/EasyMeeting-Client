@@ -11,7 +11,7 @@
 
       <div class="right-side">
         <div class="doc">
-          <div class="title">Getting Started</div>
+          <div class="title">Getting Started!</div>
           <p>
             electron-vue comes packed with detailed documentation that covers everything from
             internal configurations, using the project structure, building your application,
