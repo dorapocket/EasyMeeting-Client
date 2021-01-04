@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -17,9 +17,12 @@ function createWindow () {
   /**
    * Initial window options
    */
+  Menu.setApplicationMenu(null);
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
+    //titleBarStyle: 'customButtonsOnHover',
+    //frame:false,
     width: 1000,
     webPreferences:{
       nodeIntegration:true,
