@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "Dorapocket <993549790@qq.com>",
   "description": "easy meeting client",
-  "license": null,
+  "license": "GPT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -53,9 +53,12 @@
   "dependencies": {
     "ant-design-vue": "^1.7.2",
     "axios": "^0.18.0",
+    "electron-store": "^6.0.1",
+    "socket.io-client": "^3.0.5",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
+    "vue-socket.io": "^3.0.10",
     "vuex": "^3.0.1",
     "vuex-electron": "^1.0.0"
   },

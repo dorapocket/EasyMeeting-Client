@@ -1,5 +1,6 @@
-import { app, BrowserWindow, Menu } from 'electron'
-
+import { app, BrowserWindow, Menu,ipcMain } from 'electron'
+const Store=require('electron-store');
+const store=new Store();
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -26,6 +27,7 @@ function createWindow () {
     width: 1000,
     webPreferences:{
       nodeIntegration:true,
+      webSecurity:false
     }
   })
 
@@ -34,6 +36,8 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+  store.set('test','hh');
+  console.log(store.get('test'));
 }
 
 app.on('ready', createWindow)
@@ -69,3 +73,11 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
+
+ipcMain.handle('setStore', (evidence, key,value) =>{
+  store.set(key,value);
+  return true;
+});
+ipcMain.handle('getStore', (evidence, key) =>{
+  return store.get(key);
+});

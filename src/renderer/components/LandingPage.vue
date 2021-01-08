@@ -1,33 +1,13 @@
 <template>
-  <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
-    <main>
-      <div class="left-side">
-        <span class="title">
-          Welcome to your new project!
-        </span>
-        <system-information></system-information>
-      </div>
-
-      <div class="right-side">
-        <div class="doc">
-          <div class="title">Getting Started!</div>
-          <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
-          </p>
-          <button @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br>
-        </div>
-        <div class="doc">
-          <div class="title alt">Other Documentation</div>
-          <button class="alt" @click="open('https://electron.atom.io/docs/')">Electron</button>
-          <button class="alt" @click="open('https://vuejs.org/v2/guide/')">Vue.js</button>
-        </div>
-      </div>
-    </main>
-  </div>
+<div :style="{ margin: '24px 16px', padding: '24px', background: '#fff' }">
+  <a-row>
+    <a-col :span='12'>
+      早上好，xxx
+    </a-col>
+  </a-row>
+</div>
 </template>
+
 
 <script>
   import SystemInformation from './LandingPage/SystemInformation'
@@ -77,7 +57,6 @@
     justify-content: space-between;
   }
 
-  main > div { flex-basis: 50%; }
 
   .left-side {
     display: flex;
@@ -125,4 +104,16 @@
     color: #42b983;
     background-color: transparent;
   }
+
+  .ant-carousel >>> .slick-slide {
+  text-align: center;
+  height: 160px;
+  line-height: 160px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel >>> .slick-slide h3 {
+  color: #fff;
+}
 </style>

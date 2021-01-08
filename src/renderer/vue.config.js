@@ -1,0 +1,11 @@
+module.exports={
+    devServer:{
+        proxy:{
+            "/socket.io":{
+                target:"http://47.106.167.117:65534",
+                ws:true,
+                changeOrigin:true
+            }
+        }
+    }
+}
