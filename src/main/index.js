@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu,ipcMain } from 'electron'
+import '../renderer/store'
 const Store=require('electron-store');
 const store=new Store();
 /**
