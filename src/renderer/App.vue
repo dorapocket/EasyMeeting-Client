@@ -22,14 +22,23 @@
             <span>投屏</span></router-link
           >
         </a-menu-item>
-
-        <a-menu-item class="clickable" key="3"
+<a-menu-item class="clickable" key="3"
+          ><router-link to="/settings">
+            
+            <a-icon type="message" /><a-badge dot><span>消息</span></a-badge></router-link
+          >
+        </a-menu-item><!--
+        <a-menu-item  class="clickable" key="4"
           ><router-link to="/settings">
             <a-icon type="setting" />
             <span>设置</span></router-link
           >
-        </a-menu-item>
+        </a-menu-item>-->
+
       </a-menu>
+<router-link to="/settings" class="clickable">
+     <a-icon type="setting" style="display:block;font-size:20px;margin:0px 0px 30px 30px;color:white;position:absolute;bottom:0px;left:0px;"/>
+     </router-link>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
@@ -50,8 +59,8 @@
 <script>
 export default {
   data: () => ({
-    collapsed: false,
-    namedisplay: false,
+    collapsed: true,
+    namedisplay: true,
   }),
   methods: {
     collclick: function () {

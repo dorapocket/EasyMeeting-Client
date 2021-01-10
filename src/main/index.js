@@ -23,8 +23,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    //titleBarStyle: 'customButtonsOnHover',
-    //frame:false,
+    // titleBarStyle: 'customButtonsOnHover',
+    // frame:false,
     width: 1000,
     webPreferences:{
       nodeIntegration:true,
