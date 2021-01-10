@@ -2,10 +2,10 @@
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
       <div class="main-avatar">
-        <a-avatar :size="40" icon="user"/>
-        <div style="margin-left:10px" v-show="!namedisplay">
-          <div style="color:white; ">Dorapocket</div>
-          <div style="color:white;">李国宇</div>
+        <a-avatar :size="40" icon="user" />
+        <div style="margin-left: 10px" v-show="!namedisplay">
+          <div style="color: white">Dorapocket</div>
+          <div style="color: white">李国宇</div>
         </div>
       </div>
       <a-menu theme="dark" mode="inline" :default-selected-keys="['1']">
@@ -39,33 +39,32 @@
           @click="collclick"
         />
       </a-layout-header>
-      <a-layout-content
-        
-      >
-        <router-view></router-view>
+      <a-layout-content>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
 export default {
-  
-  data:()=>({
-      collapsed: false,
-      namedisplay:false,
-    }),
-  methods:{
-    collclick:function(){
-      this.collapsed=!this.collapsed;
-      if(!this.collapsed){
-      setTimeout(()=>{
-        this.namedisplay=!this.namedisplay;
-      },100);
-      }else{
-        this.namedisplay=!this.namedisplay;
+  data: () => ({
+    collapsed: false,
+    namedisplay: false,
+  }),
+  methods: {
+    collclick: function () {
+      this.collapsed = !this.collapsed;
+      if (!this.collapsed) {
+        setTimeout(() => {
+          this.namedisplay = !this.namedisplay;
+        }, 100);
+      } else {
+        this.namedisplay = !this.namedisplay;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
@@ -98,6 +97,6 @@ export default {
   display: flex;
   flex-direction: row;
   margin: 10px 0px 10px 20px;
-  color:white;
+  color: white;
 }
 </style>

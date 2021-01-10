@@ -33,7 +33,7 @@
     <div v-if="step == 1">
       <div style="display: flex; justify-content: center; padding-top: 25px">
         <img
-          id="computer_proj"
+          class="projbigimg"
           src="~@/assets/computer_proj.svg"
           alt="computer_proj"
         />
@@ -65,17 +65,10 @@
       </div>
     </div>
     <div v-if="step == 2" style="height: 100%">
-      <h2 style="text-align: center; margin-top: 15px">请选择你要投影的屏幕</h2>
-      <a-button
-        type="primary"
-        shape="round"
-        style="margin-top: 10px"
-        @click="getMedia"
-        >测试</a-button
-      >
+      <h2 style="text-align: center; margin-top: 30px">请选择你要投影的屏幕</h2>
       <div
         style="
-          height: 80%;
+          height: 70%;
           display: flex;
           justify-content: space-around;
           align-content: space-around;
@@ -86,9 +79,40 @@
         id="screens"
       ></div>
     </div>
-    <div v-if="step == 3" style="height: 100%">
-      <h2 style="text-align: center; margin-top: 15px">屏幕</h2>
-      <video id="preview" autoplay></video>
+    <div v-if="step == 3" style="display:flex;flex-direction:column;height:100%;">
+      <a-spin size="large" :tip="tip" v-if="connectloading" style="margin:auto;transform(1.2);"/>
+      <div
+        v-if="!connectloading"
+        style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding-top: 15px;
+        "
+      >
+        <img
+          v-if="connectionStatus"
+          class="projbigimg"
+          src="~@/assets/projector.svg"
+          alt="projector"
+        />
+        <img
+          v-if="!connectionStatus"
+          class="projbigimg"
+          src="~@/assets/error.svg"
+          alt="error"
+        />
+        <h2 style="text-align: center">{{ tip }}</h2>
+        <a-button
+          type="danger"
+          shape="round"
+          :icon="step3btnicon"
+          size="large"
+          style="margin:auto;margin-top:15px;"
+          @click="stopShare"
+          >{{ step3btn }}</a-button
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -126,13 +150,18 @@ let socket;
 let peerConnection;
 let Screensources;
 let dataChannel;
-let transferStream=new MediaStream();
+let transferStream = new MediaStream();
 const configuration = {
   iceServers: [
     {
-      urls: "turn:turn.lgyserver.top:3478",
-      username: "1610096811:samantha",
-      credential: "Q8U5JnuY3gKt3JGcQGEKIbpaaNY=",
+      urls: "turn:turn.lgyserver.top:3478?transport=udp",
+      username: "1610198274:dorapocket",
+      credential: "EJMqW3VxFEoxwwT+0p2NOwLFLBQ=",
+    },
+    {
+      urls: "turn:turn.lgyserver.top:3478?transport=tcp",
+      username: "1610198274:dorapocket",
+      credential: "EJMqW3VxFEoxwwT+0p2NOwLFLBQ=",
     },
     { urls: "stun:turn.lgyserver.top:3478" },
   ],
@@ -145,17 +174,50 @@ export default {
       projCode: "",
       btnloading: false,
     },
+    tip: "正在连接到电视...",
+    connectloading: true,
+    connectionStatus: false,
   }),
+  computed: {
+    step3btnicon: function () {
+      return this.connectionStatus ? "close" : "rollback";
+    },
+    step3btn: function () {
+      return this.connectionStatus ? "停止投屏" : "重试";
+    },
+  },
+  mounted: function () {
+    this.initCodeInput();
+  },
   methods: {
+    initCodeInput: function () {
+      const txt = document.getElementById("inputProj");
+      txt.addEventListener("input", () => {
+        txt.value = txt.value.toUpperCase();
+      });
+    },
+    stopShare: function () {
+      this.step = 1;
+      this.step1.projCode = "";
+      this.tip = "正在连接到电视...";
+      this.connectloading = true;
+      this.connectionStatus = false;
+      transferStream = new MediaStream();
+      peerConnection.close();
+      socket.disconnect();
+      socket.close();
+      this.initCodeInput();
+    },
     connectToProj: function () {
       let that = this;
       that.step1.btnloading = true;
+      document.getElementById("inputProj").value=document.getElementById("inputProj").value.toUpperCase();
       if (!socket || !socket.connected) {
         socket = io.connect("http://47.106.167.117:65534/rtc");
         socket.on("connect", function () {
           socket.emit("CONNECT_TO_TV", {
             username: "lgy",
-            projCode: that.step1.projCode,
+            projCode: that.step1.projCode.toUpperCase(),
           });
         });
         socket.on("CONNECT_TO_TV_FAILED", (data) => {
@@ -228,13 +290,15 @@ export default {
       console.log();
     },
     getScreenSelected: async function (e) {
-      const id=e.target.getAttribute("data-screenid");
-      console.log('Project Screen:',id);
+      const id = e.target.getAttribute("data-screenid");
+      console.log("Project Screen:", id);
       this.step = 3;
       await this.connectRTC(id);
     },
     connectRTC: async function (screenid) {
+      let that = this;
       try {
+        that.tip = "正在连接到投屏端...";
         peerConnection = new RTCPeerConnection(configuration);
         //peerConnection.onicecandidate = this.handleIceCandidate;
         peerConnection.onicecandidate = function (e) {
@@ -245,54 +309,53 @@ export default {
             });
           }
         };
-        peerConnection.oniceconnectionstatechange = function (e) {
-          console.log("iceconnectionstatechange", e);
-        };
         peerConnection.onconnectionstatechange = function (event) {
+          console.log("iceconnectionstatechange", event, peerConnection);
           if (peerConnection.connectionState == "connected") {
             console.log("RTC Create Success");
+            that.connectloading = false;
+            that.connectionStatus = true;
+            that.tip = "正在投屏";
+          }
+          if (peerConnection.connectionState == "failed") {
+            that.tip = "连接失败，请稍后重试";
+            that.connectloading = false;
+            that.connectionStatus = false;
+          }
+          if (peerConnection.connectionState == "disconnected") {
+            that.tip = "连接断开，请重试";
+            that.connectloading = false;
+            that.connectionStatus = false;
           }
         };
         peerConnection.onicegatheringstatechange = function (event) {
           console.log("RTC ICE State Change:", peerConnection.connectionState);
         };
-peerConnection.addStream(transferStream);
-        
-        dataChannel = peerConnection.createDataChannel("testChannel");
-        dataChannel.addEventListener("open", (event) => {
-          console.log('channel state change',dataChannel);
-          dataChannel.send("hi! tv!");
-          console.log("sending test message",dataChannel,peerConnection);
-        });
-        navigator.mediaDevices
-          .getUserMedia({
-            video: {
-              mandatory: {
-                chromeMediaSource: "desktop",
-                chromeMediaSourceId: Screensources[screenid].id,
-                minWidth: 640,
-                maxWidth: 1920,
-                minHeight: 360,
-                maxHeight: 1080,
-              },
+        peerConnection.onicecandidateerror = function (event) {
+          console.log("RTC ICE Err:", event, peerConnection);
+        };
+        transferStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            mandatory: {
+              chromeMediaSource: "desktop",
+              chromeMediaSourceId: Screensources[screenid].id,
+              minWidth: 320,
+              maxWidth: 320,
+              minHeight: 180,
+              maxHeight: 180,
             },
-          })
-          .then((localStream) => {
-            // peerConnection.addStream(localStream);
-            transferStream=localStream;
-            console.log("detect stream:", localStream,peerConnection);
-            setTimeout(() => {
-              document.getElementById("preview").srcObject = localStream;
-              document.getElementById("preview").play();
-            }, 3000);
-          });
+          },
+        });
       } catch (e) {
-        console.log("RTC Error:", e);
+        console.log("RTC Error", e);
+        that.connectloading = false;
+        that.connectionStatus = false;
+        that.tip = "发起连接时出错";
       }
 
+      peerConnection.addStream(transferStream);
       const offer = await peerConnection.createOffer({
         offerToReceiveVideo: 1,
-        offerToReceiveAudio: 1,
       });
       console.log("myoffer", offer);
       await peerConnection.setLocalDescription(offer);
@@ -301,9 +364,15 @@ peerConnection.addStream(transferStream);
       });
       socket.on("RTC_TV_Answer_To_Client", async (msg) => {
         if (msg.answer) {
-          const remoteDesc = new RTCSessionDescription(msg.answer);
-          await peerConnection.setRemoteDescription(remoteDesc);
-          console.log("RTC TV answer received", peerConnection);
+          try {
+            const remoteDesc = new RTCSessionDescription(msg.answer);
+            await peerConnection.setRemoteDescription(remoteDesc);
+            console.log("RTC TV answer received", peerConnection);
+          } catch (e) {
+            that.connectloading = false;
+            that.connectionStatus = false;
+            that.tip = "发起连接时出错";
+          }
         }
       });
       socket.on("RTC_Candidate_Exchange", async (message) => {
