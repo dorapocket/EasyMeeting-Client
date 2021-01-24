@@ -25,10 +25,10 @@
           :wrapper-col="wrapperCol"
           style="padding-top: 20px"
         >
-          <a-form-model-item label="鉴权服务器地址">
+          <a-form-model-item required label="会议服务器地址">
             <a-input v-model="form.name" />
           </a-form-model-item>
-          <a-form-model-item label="信令服务器地址">
+          <a-form-model-item required label="投屏服务器地址">
             <a-input v-model="form.name" />
           </a-form-model-item>
           <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">

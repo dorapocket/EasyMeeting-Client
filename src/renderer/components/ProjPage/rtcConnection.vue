@@ -96,9 +96,9 @@ export default {
       try {
         this.tip = "正在连接到投屏端...";
         peerConnection = new RTCPeerConnection(configuration);
-        peerConnection.onicecandidate = function (e) {
-          console.log(e);
-          if (e.candidate) {
+        peerConnection.onicecandidate = function (event) {
+          console.log(event);
+          if (event.candidate) {
             socket.emit("RTC_Candidate_Exchange", {
               iceCandidate: event.candidate,
             });
@@ -137,10 +137,10 @@ export default {
             mandatory: {
               chromeMediaSource: "desktop",
               chromeMediaSourceId: Screensources[screenid].id,
-              minWidth: 320,
-              maxWidth: 320,
-              minHeight: 180,
-              maxHeight: 180,
+              minWidth: 640,
+              maxWidth: 1920,
+              minHeight: 360,
+              maxHeight: 1080,
             },
           },
         });
