@@ -1,111 +1,30 @@
 <template>
-  <a-layout id="components-layout-demo-custom-trigger">
-    <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-      <div class="main-avatar">
-        <a-avatar :size="40" icon="user" />
-        <div style="margin-left: 10px" v-show="!namedisplay">
-          <div style="color: white">Dorapocket</div>
-          <div style="color: white">李国宇</div>
-        </div>
-      </div>
-      <a-menu theme="dark" mode="inline" :default-selected-keys="['1']">
-        <a-menu-item class="clickable" key="1"
-          ><router-link to="/home">
-            <a-icon type="user" />
-            <span>日程</span></router-link
-          >
-        </a-menu-item>
-
-        <a-menu-item class="clickable" key="2"
-          ><router-link to="/proj">
-            <a-icon type="video-camera" />
-            <span>投屏</span></router-link
-          >
-        </a-menu-item>
-<a-menu-item class="clickable" key="3"
-          ><router-link to="/settings">
-            
-            <a-icon type="message" /><a-badge dot><span>消息</span></a-badge></router-link
-          >
-        </a-menu-item><!--
-        <a-menu-item  class="clickable" key="4"
-          ><router-link to="/settings">
-            <a-icon type="setting" />
-            <span>设置</span></router-link
-          >
-        </a-menu-item>-->
-
-      </a-menu>
-<router-link to="/settings" class="clickable">
-     <a-icon type="setting" style="display:block;font-size:20px;margin:0px 0px 30px 30px;color:white;position:absolute;bottom:0px;left:0px;"/>
-     </router-link>
-    </a-layout-sider>
-    <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
-        <a-icon
-          class="trigger clickable"
-          :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-          @click="collclick"
-        />
-      </a-layout-header>
-      <a-layout-content>
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
-      </a-layout-content>
-    </a-layout>
-  </a-layout>
+  <div>
+    <login-page v-if="login"></login-page>
+    <main-page v-else></main-page>
+  </div>
 </template>
 <script>
+import MainPage from "./components/MainPage.vue";
+import LoginPage from "./components/LoginPage.vue";
+const { ipcRenderer } = require("electron");
 export default {
+  components: { MainPage, LoginPage },
   data: () => ({
-    collapsed: true,
-    namedisplay: true,
+    login: true,
   }),
-  methods: {
-    collclick: function () {
-      this.collapsed = !this.collapsed;
-      if (!this.collapsed) {
-        setTimeout(() => {
-          this.namedisplay = !this.namedisplay;
-        }, 100);
-      } else {
-        this.namedisplay = !this.namedisplay;
-      }
-    },
+  created: function() {
+    let stat = ipcRenderer.sendSync("getStorageSync", "loginStatus");
+    if (stat) {
+      this.login = false;
+    } else {
+      this.login = true;
+    }
   },
+  methods:{
+    setLoginStatus(stat){
+      this.login=!stat;
+    }
+  }
 };
 </script>
-<style>
-.clickable {
-  -webkit-app-region: no-drag;
-}
-#components-layout-demo-custom-trigger {
-  height: 100vh;
-}
-
-#components-layout-demo-custom-trigger .trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-#components-layout-demo-custom-trigger .trigger:hover {
-  color: #1890ff;
-}
-
-#components-layout-demo-custom-trigger .logo {
-  margin: 16px;
-  color: white;
-  font-size: 20px;
-  font-weight: 600;
-}
-.main-avatar {
-  display: flex;
-  flex-direction: row;
-  margin: 10px 0px 10px 20px;
-  color: white;
-}
-</style>

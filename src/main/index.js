@@ -1,59 +1,75 @@
-import { app, BrowserWindow, Menu,ipcMain } from 'electron'
-import '../renderer/store'
-const Store=require('electron-store');
-const store=new Store();
+import { app, BrowserWindow, Menu, ipcMain } from "electron";
+const fs = require("fs");
+import "../renderer/store";
+const Store = require("electron-store");
+const store = new Store();
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+if (process.env.NODE_ENV !== "development") {
+  global.__static = require("path")
+    .join(__dirname, "/static")
+    .replace(/\\/g, "\\\\");
 }
 
-let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
-
-function createWindow () {
+let mainWindow;
+const winURL =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:9080`
+    : `file://${__dirname}/index.html`;
+store.set('loginStatus',false);
+function createWindow() {
   /**
    * Initial window options
    */
   Menu.setApplicationMenu(null);
   mainWindow = new BrowserWindow({
-    height: 563,
+    height: 400,//563
     useContentSize: true,
-    // titleBarStyle: 'customButtonsOnHover',
-    // frame:false,
-    width: 1000,
-    webPreferences:{
-      nodeIntegration:true,
-      webSecurity:false
-    }
-  })
+    //titleBarStyle: 'customButtonsOnHover',
+    //frame:false,
+    width: 300,//1000
+    webPreferences: {
+      nodeIntegration: true,
+      webSecurity: false,
+    },
+  });
 
-  mainWindow.loadURL(winURL)
+  mainWindow.loadURL(winURL);
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
-  store.set('test','hh');
-  console.log(store.get('test'));
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+  let config=require("../config.json")||{};
+  store.set("baseURL", config.baseURL || "");
+  store.set("rtcServer", config.rtcServer || "");
+  store.set("loginRemember", {
+    username:"lgy7",
+    autologin:true
+  });
+
+  mainWindow.loadURL(winURL);
+
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
 }
 
-app.on('ready', createWindow)
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
+app.on("ready", createWindow);
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
   }
-})
+});
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (mainWindow === null) {
-    createWindow()
+    createWindow();
   }
-})
+});
 
 /**
  * Auto Updater
@@ -75,10 +91,19 @@ app.on('ready', () => {
 })
  */
 
-ipcMain.handle('setStore', (evidence, key,value) =>{
-  store.set(key,value);
-  return true;
+ipcMain.on("setStorageSync", (event, key, value) => {
+  store.set(key, value);
 });
-ipcMain.handle('getStore', (evidence, key) =>{
-  return store.get(key);
+ipcMain.on("getStorageSync", (event, key) => {
+  console.log()
+  event.returnValue=store.get(key);
 });
+ipcMain.on("needLogin",(event)=>{
+  store.set("loginStatus", false);
+  mainWindow.setSize(300,400,true)
+  mainWindow.reload()
+})
+ipcMain.on("loginSuccess",(event)=>{
+  store.set("loginStatus", true);
+  mainWindow.setSize(1000,600,true)
+})
