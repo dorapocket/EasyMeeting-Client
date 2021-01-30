@@ -54,9 +54,6 @@ function createWindow() {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
-  let config=require("../config.json")||{};
-  store.set("baseURL", config.baseURL || "");
-  store.set("rtcServer", config.rtcServer || "");
 }
 
 
@@ -96,7 +93,6 @@ app.on('ready', () => {
 
 ipcMain.on("setStorageSync", (event, key, value) => {
   store.set(key, value);
-  event.returnValue=true;
 });
 ipcMain.on("getStorageSync", (event, key) => {
   console.log()
@@ -104,14 +100,10 @@ ipcMain.on("getStorageSync", (event, key) => {
 });
 ipcMain.on("needLogin",(event)=>{
   store.set("loginStatus", false);
-  
+  mainWindow.setSize(300,400,true)
   mainWindow.reload()
-  
 })
 ipcMain.on("loginSuccess",(event)=>{
   store.set("loginStatus", true);
   mainWindow.setSize(1000,600,true)
-  mainWindow.reload();
-  console.log('login success');
-  
 })

@@ -21,5 +21,10 @@ export default {
       this.login = true;
     }
   },
+  methods:{
+    setLoginStatus(stat){
+      this.login=!stat;
+    }
+  }
 };
 </script>
