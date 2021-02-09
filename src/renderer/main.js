@@ -29,12 +29,7 @@ axios.interceptors.request.use(config=>{
   Promise.error(error);
 });
 axios.interceptors.response.use(response => {
-  if (response.status == 200) {
-    return Promise.resolve(response);
-  } else {
-    message.warn(response.data.msg);
-    return Promise.resolve(response);
-  }
+    return response;
 },error => {
   if (error.response&&error.response.status) {
     switch (error.response.status) {
@@ -60,10 +55,10 @@ axios.interceptors.response.use(response => {
       default:
         message.error(error.response.data.message.msg);
     }
-    return Promise.reject(error.response);
+    return error.response;
   }else{
     message.error("请求超时，请检查网络连接后继续！");
-    return Promise.reject(error.response);
+    return error.response;
   }
 })
 

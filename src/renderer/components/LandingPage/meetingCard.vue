@@ -15,9 +15,9 @@
           item-layout="horizontal"
           :data-source="todoData"
           class="dateList"
-          style="max-height: 160px; overflow: scroll; margin-top: -10px"
+          style="height: 160px; overflow: scroll; margin-top: -10px"
         >
-          <a-list-item slot="renderItem" slot-scope="item">
+          <a-list-item slot="renderItem" slot-scope="item" style="border-bottom:1px #00000022 solid">
             <a slot="actions">
               <a-popover>
                 <div slot="title">
@@ -29,8 +29,16 @@
                 <a-icon type="info-circle" />
               </a-popover>
             </a>
-            <a slot="actions"><a-icon type="edit" /></a>
-            <a slot="actions"><a-icon type="delete" /></a>
+            <a v-if="item.isSponsor" @click="editMeeting(item.aid)" slot="actions"><a-icon type="edit" /></a>
+            <a v-if="item.isSponsor" slot="actions">
+              <a-popconfirm
+    title="确定要删除该会议吗？该操作无法撤回！"
+    ok-text="确定"
+    cancel-text="取消"
+    @confirm="confirmDelete(item.aid)"
+  >
+    <a-icon type="delete" />
+  </a-popconfirm></a>
             <a-list-item-meta>
               <a slot="title" href="#">
                 <a-tag color="blue">
@@ -73,42 +81,22 @@ import CreateMeetingModal from './createMeetingModal'
 export default {
     components:{CreateMeetingModal},
     data: () => ({
-    todoData: [
-      {
-        theme: "TextVQA组会",
-        desc: "发起人：余宙 参与人：王璐瑶，陈晨，李国宇等5人",
-        time: "2020年1月11日 12：00",
-        pos: "6W02 大会议室",
-      },
-      {
-        theme: "TextVQA组会",
-        desc: "发起人：余宙 参与人：王璐瑶，陈晨，李国宇等5人",
-        time: "2020年1月11日 12：00",
-        pos: "6W02 大会议室",
-      },
-      {
-        theme: "TextVQA组会",
-        desc: "发起人：余宙 参与人：王璐瑶，陈晨，李国宇等5人",
-        time: "2020年1月11日 12：00",
-        pos: "6W02 大会议室",
-      },
-      {
-        theme: "TextVQA组会",
-        desc: "发起人：余宙 参与人：王璐瑶，陈晨，李国宇等5人",
-        time: "2020年1月11日 12：00",
-        pos: "6W02 大会议室",
-      },
-      {
-        theme: "TextVQA组会",
-        desc: "发起人：余宙 参与人：王璐瑶，陈晨，李国宇等5人",
-        time: "2020年1月11日 12：00",
-        pos: "6W02 大会议室",
-      },
-    ],
   }),
+  computed:{
+    todoData:function(){
+      return this.$store.state.landingPage.todoList;
+    },
+    
+  },
   methods:{
       addMeeting:function(){
           this.$store.dispatch('landingPage/openCreateMeetingModal',true);
+      },
+      confirmDelete:function(aid){
+        this.$store.dispatch('landingPage/deleteMeeting',aid);
+      },
+      editMeeting:function(aid){
+        // TODO:
       }
   }
 }

@@ -85,7 +85,7 @@ export default {
           that.loginloading = false;
           if (response.data.code == 200) {
             console.log("Login Set Token:", response.data.token);
-            ipcRenderer.send("setStorage", "UserToken", response.data.token);
+            ipcRenderer.send("setStorageSync", "UserToken", response.data.token);
             that.getUserInfoAndSwitch(response.data.token);
           } else {
             that.msg = response.data.msg;

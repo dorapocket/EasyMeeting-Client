@@ -7,14 +7,14 @@
           <div class="overview">
             <div>
               <div>今日会议</div>
-              <div class="meetingNumber" style="color: green">1</div>
+              <div class="meetingNumber" style="color: green">{{todayMeeting}}</div>
             </div>
             <div
               style="height: 80%; width: 2px; border: 1px solid #00000022"
             ></div>
             <div>
               <div>待开会议</div>
-              <div class="meetingNumber" style="color: #2677ff">4</div>
+              <div class="meetingNumber" style="color: #2677ff">{{waitingMeeting}}</div>
             </div>
           </div>
         </a-card>
@@ -42,12 +42,15 @@
 import { message } from "ant-design-vue";
 const { ipcRenderer } = require("electron");
 export default {
-  data:()=>({
-    todayMeeting:'-',
-    waitingMeeting:'-'
-  }),
+  computed:{
+    todayMeeting:function(){
+      return this.$store.state.landingPage.todayMeetingCnt;
+    },
+    waitingMeeting:function(){
+      return this.$store.state.landingPage.waitMeetingCnt;
+    },
+  },
   mounted:function(){
-    let that=this;
 
   }
 }

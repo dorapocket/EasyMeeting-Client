@@ -76,6 +76,8 @@
             prop="timeEnd"
             :minute-step="15"
             :second-step="10"
+            :disabledHours="disabledHours"
+            :disabledMinutes="disabledMinutes"
             format="HH:mm"
           />
           <!-- :default-value="moment('12:08', 'HH:mm')" -->
@@ -121,6 +123,7 @@
 }
 </style>
 <script>
+// TODO: 会议室自定义
 import { message } from "ant-design-vue";
 import moment from "moment";
 const { ipcRenderer } = require("electron");
@@ -209,10 +212,10 @@ acts:{},
                 remark:that.form.desc||'',
             })
             .then(function(response) {
-                that.acts=response.data.data;
-                this.handleCancel();
                 message.success('会议创建成功');
+                that.handleCancel();  
                 that.confirmLoading=false;
+                that.$store.dispatch('landingPage/getMeetingList');
             })
             .catch(function(error) {
               that.confirmLoading=false;
