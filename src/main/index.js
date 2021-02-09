@@ -93,9 +93,9 @@ app.on('ready', () => {
 
 ipcMain.on("setStorageSync", (event, key, value) => {
   store.set(key, value);
+  event.returnValue=true;
 });
 ipcMain.on("getStorageSync", (event, key) => {
-  console.log()
   event.returnValue=store.get(key);
 });
 ipcMain.on("needLogin",(event)=>{
@@ -103,7 +103,8 @@ ipcMain.on("needLogin",(event)=>{
   mainWindow.setSize(300,400,true)
   mainWindow.reload()
 })
-ipcMain.on("loginSuccess",(event)=>{
+ipcMain.on("loginSuccess",(event,token)=>{
   store.set("loginStatus", true);
+  store.set('UserToken',token);
   mainWindow.setSize(1000,600,true)
 })

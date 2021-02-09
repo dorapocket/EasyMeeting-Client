@@ -38,3 +38,17 @@
   text-align: center;
 }
 </style>
+<script>
+import { message } from "ant-design-vue";
+const { ipcRenderer } = require("electron");
+export default {
+  data:()=>({
+    todayMeeting:'-',
+    waitingMeeting:'-'
+  }),
+  mounted:function(){
+    let that=this;
+
+  }
+}
+</script>

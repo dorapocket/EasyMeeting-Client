@@ -108,7 +108,7 @@ export default {
   }),
   methods:{
       addMeeting:function(){
-          this.$store.commit('landingPage/setCreateMeetingModal',true);
+          this.$store.dispatch('landingPage/openCreateMeetingModal',true);
       }
   }
 }

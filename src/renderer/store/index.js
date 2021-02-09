@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import vueElectron from 'vue-electron'
 import Vuex from 'vuex'
 
 import { createPersistedState, createSharedMutations } from 'vuex-electron'

@@ -4,8 +4,8 @@
       <div class="main-avatar">
         <a-avatar :size="40" icon="user" />
         <div style="margin-left: 10px" v-show="!namedisplay">
-          <div style="color: white">Dorapocket</div>
-          <div style="color: white">李国宇</div>
+          <div style="color: white">{{username}}</div>
+          <div style="color: white">{{realname}}</div>
         </div>
       </div>
       <a-menu theme="dark" mode="inline" :default-selected-keys="['1']">
@@ -48,11 +48,20 @@
   </a-layout>
 </template>
 <script>
+const { ipcRenderer } = require("electron");
 export default {
   data: () => ({
     collapsed: false,
     namedisplay: false,
   }),
+  computed:{
+    username:function(){
+      return ipcRenderer.sendSync('getStorageSync','UserInfo').username;
+    },
+    realname:function(){
+return ipcRenderer.sendSync('getStorageSync','UserInfo').realname
+    }
+  },
   methods: {
     collclick: function () {
       this.collapsed = !this.collapsed;
@@ -65,6 +74,7 @@ export default {
       }
     },
   },
+
 };
 </script>
 <style>

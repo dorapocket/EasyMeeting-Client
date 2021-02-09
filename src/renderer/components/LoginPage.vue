@@ -10,6 +10,7 @@
 </template>
 <script>
 const { ipcRenderer } = require("electron");
+import { message } from "ant-design-vue";
 export default {
   data: () => ({
     loginloading: false,
@@ -29,22 +30,15 @@ export default {
       let validToken = new Promise((reslove, reject) => {
         this.$http
           .get("/user/validToken", {
-            params: {
-              token,
-            },
           })
           .then(function(response) {
             that.loginloading = false;
-            if (response.data.code == 200) {
-              that.$parent.setLoginStatus(true);
               ipcRenderer.send(
                 "setStorageSync",
                 "UserToken",
                 response.data.data.token
               );
-              ipcRenderer.send("loginSuccess");
-              console.log("Login Set Token:", response.data.data.token);
-            }
+              that.getUserInfoAndSwitch(response.data.data.token);
             reslove();
           })
           .catch(function(error) {
@@ -90,10 +84,9 @@ export default {
         .then(function(response) {
           that.loginloading = false;
           if (response.data.code == 200) {
-            that.$parent.setLoginStatus(true);
             console.log("Login Set Token:", response.data.token);
             ipcRenderer.send("setStorage", "UserToken", response.data.token);
-            ipcRenderer.send("loginSuccess");
+            that.getUserInfoAndSwitch(response.data.token);
           } else {
             that.msg = response.data.msg;
           }
@@ -124,6 +117,35 @@ export default {
         return returnValue;
       }
       return returnValue;
+    },
+    getUserInfoAndSwitch(token) {
+      let that = this;
+      this.$http
+        .get("/user/userInfo", {
+          params: {
+            token: token,
+          },
+        })
+        .then(function(response) {
+          if (response.data.code == 200) {
+            console.log("获取用户信息成功:", response.data.data);
+            ipcRenderer.send("setStorageSync",'UserInfo',response.data.data);
+            console.log("Login Set Token:", token);
+            that.$parent.setLoginStatus(true);
+            ipcRenderer.send("loginSuccess",token);
+          } else {
+            message.error("获取用户信息失败：" + response.data.msg);
+          }
+        })
+        .catch(function(error) {
+          if (!error.response) {
+            message.error(
+              "获取用户信息失败：" + "无法连接到服务器，请检查您的网络"
+            );
+          } else {
+            message.error("获取用户信息失败：" + error.response.data.msg);
+          }
+        });
     },
   },
 };
