@@ -45,6 +45,7 @@
 </style>
 <script>
 import { message } from "ant-design-vue";
+const { ipcRenderer } = require("electron");
 import io from "socket.io-client";
 let store;
 let $store;
@@ -58,57 +59,69 @@ export default {
         $store.commit("projPage/setProjCode", value);
       },
     },
-    btnloading: function () {
+    btnloading: function() {
       return store.connectBtnLoading;
     },
   },
-  created:function(){
-       store = this.$store.state.projPage;
+  created: function() {
+    store = this.$store.state.projPage;
     $store = this.$store;
   },
-  mounted: function () {
-    const txt = document.getElementById("inputProj");
-    txt.addEventListener("input", () => {
-      txt.value = txt.value.toUpperCase();
-    });
-  },
   methods: {
-    connectToProj: function () {
+    connectToProj: function() {
       let that = this;
-      let socket = this.$sockets['rtc'];
+      let socket = this.$sockets["rtc"];
       $store.commit("projPage/setConnectBtnLoading", true);
-      document.getElementById("inputProj").value = document
-        .getElementById("inputProj")
-        .value.toUpperCase();
-      if (!socket || !socket.connected) {
-        socket = io.connect("http://47.106.167.117:65534/rtc");
-        this.$sockets['rtc']=socket;
-        socket.on("connect", function () {
-          socket.emit("CONNECT_TO_TV", {
-            username: "lgy",
-            projCode: store.projCode.toUpperCase(),
-          });
-        });
-        socket.on("CONNECT_TO_TV_FAILED", (data) => {
-          console.error("Connecting to TV failed. Reason:" + data.msg);
-          message.error(data.msg);
-          socket.close();
-          $store.commit("projPage/setConnectBtnLoading", false);
-        });
-        socket.on("CONNECT_TO_TV_SUCCESS", (data) => {
-          console.log("Connecting success!");
-          message.success(data.msg);
-          $store.commit("projPage/setProjStep", 2);
-          // this.getMedia();
-        });
-        socket.on("NEW_CLIENT_JOIN", (data) => {
-          console.log("A new Client join, username: " + data.username);
-        });
-        socket.on("disconnect", function () {
-          console.warn("A connection to server has disconnected.");
-          $store.commit("projPage/setConnectBtnLoading", false);
-        });
+      if (socket) {
+        socket.disconnect(); //!socket.connected
       }
+      
+        let rtcURL = ipcRenderer.sendSync("getStorageSync", "rtcServer");
+        console.log(rtcURL);
+        socket = io.connect(rtcURL);
+        this.$sockets["rtc"] = socket;
+      socket.on("connect", function() {
+        /**/
+      });
+      socket.on("VERIFY",function(){
+        let token = ipcRenderer.sendSync("getStorageSync", "UserToken");
+        socket.emit("VERIFY_FEEDBACK",token);
+      });
+      socket.on("VERIFY_RESPONCE",function(obj){
+        if(obj.code==200){
+          socket.emit("CONFIG",ipcRenderer.sendSync("getStorageSync", "UserInfo"));
+        }else{
+          message.error(obj.msg);
+        }
+      });
+      socket.on("CONFIG_FEEDBACK",obj=>{
+        $store.commit("projPage/setRtcConfig",obj.config);
+        console.log(obj);
+        socket.emit("CONNECT_TO_TV", {
+          username: "lgy",
+          projCode: store.projCode.toUpperCase(),
+        });
+      });
+
+      socket.on("CONNECT_TO_TV_FAILED", (data) => {
+        console.error("Connecting to TV failed. Reason:" + data.msg);
+        message.error(data.msg);
+        socket.close();
+        $store.commit("projPage/setConnectBtnLoading", false);
+      });
+      socket.on("CONNECT_TO_TV_SUCCESS", (data) => {
+        console.log("Connecting success!");
+        message.success(data.msg);
+        $store.commit("projPage/setProjStep", 2);
+        // this.getMedia();
+      });
+      socket.on("NEW_CLIENT_JOIN", (data) => {
+        console.log("A new Client join, username: " + data.username);
+      });
+      socket.on("disconnect", function() {
+        console.warn("A connection to server has disconnected.");
+        $store.commit("projPage/setConnectBtnLoading", false);
+      });
     },
   },
 };

@@ -25,11 +25,12 @@ function createWindow() {
    */
   Menu.setApplicationMenu(null);
   mainWindow = new BrowserWindow({
-    height: 400,//563
+    height: 450,//563
     useContentSize: true,
     //titleBarStyle: 'customButtonsOnHover',
     //frame:false,
     width: 300,//1000
+    maximizable: false,
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false,
@@ -37,6 +38,10 @@ function createWindow() {
   });
 
   mainWindow.loadURL(winURL);
+  let webContents=mainWindow.webContents;
+  webContents.on('did-finish-load',()=>{
+    webContents.setZoomFactor(1);
+});
 
   mainWindow.on("closed", () => {
     mainWindow = null;
@@ -44,10 +49,6 @@ function createWindow() {
   let config=require("../config.json")||{};
   store.set("baseURL", config.baseURL || "");
   store.set("rtcServer", config.rtcServer || "");
-  store.set("loginRemember", {
-    username:"lgy7",
-    autologin:true
-  });
 
   mainWindow.loadURL(winURL);
 

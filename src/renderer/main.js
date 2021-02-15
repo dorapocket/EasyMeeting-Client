@@ -11,7 +11,6 @@ Vue.http = Vue.prototype.$http = axios;
 
 // 读取配置
 let baseURL = ipcRenderer.sendSync("getStorageSync", "baseURL");
-console.log(baseURL);
 if (baseURL !== "") {
   console.warn("Server info:", baseURL);
   axios.defaults.baseURL = baseURL;
@@ -55,10 +54,10 @@ axios.interceptors.response.use(response => {
       default:
         message.error(error.response.data.message.msg);
     }
-    return error.response;
+    return Promise.reject(error);
   }else{
     message.error("请求超时，请检查网络连接后继续！");
-    return error.response;
+    return Promise.reject(error);
   }
 })
 

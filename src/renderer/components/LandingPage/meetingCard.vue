@@ -29,7 +29,7 @@
                 <a-icon type="info-circle" />
               </a-popover>
             </a>
-            <a v-if="item.isSponsor" @click="editMeeting(item.aid)" slot="actions"><a-icon type="edit" /></a>
+            <!--<a v-if="item.isSponsor" @click="editMeeting(item.aid)" slot="actions"><a-icon type="edit" /></a>-->
             <a v-if="item.isSponsor" slot="actions">
               <a-popconfirm
     title="确定要删除该会议吗？该操作无法撤回！"
@@ -95,9 +95,7 @@ export default {
       confirmDelete:function(aid){
         this.$store.dispatch('landingPage/deleteMeeting',aid);
       },
-      editMeeting:function(aid){
-        // TODO:
-      }
+      // TODO: 增加修改会议功能
   }
 }
 </script>

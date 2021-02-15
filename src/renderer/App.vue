@@ -1,6 +1,6 @@
 <template>
   <div>
-    <login-page v-if="login"></login-page>
+    <login-page v-if="!loginStatus"></login-page>
     <main-page v-else></main-page>
   </div>
 </template>
@@ -13,18 +13,10 @@ export default {
   data: () => ({
     login: true,
   }),
-  created: function() {
-    let stat = ipcRenderer.sendSync("getStorageSync", "loginStatus");
-    if (stat) {
-      this.login = false;
-    } else {
-      this.login = true;
+  computed:{
+    loginStatus:function(){
+      return this.$store.state.login.loginStatus;
     }
   },
-  methods:{
-    setLoginStatus(stat){
-      this.login=!stat;
-    }
-  }
 };
 </script>
