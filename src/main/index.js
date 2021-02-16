@@ -49,6 +49,7 @@ function createWindow() {
   let config=require("../config.json")||{};
   store.set("baseURL", config.baseURL || "");
   store.set("rtcServer", config.rtcServer || "");
+  store.set("wxSocketUrl", config.wxSocketUrl || "");
 
   mainWindow.loadURL(winURL);
 

@@ -1,8 +1,8 @@
 baseURL
 rtcServer
+wxSocketUrl
 loginStatus
 loginRemember:{username,autologin}
 UserToken
-UserData
 firstLogin
 UserInfo:{uid,realname,username,telephone,email} 设置和服务端的函数有关 返回的data直接赋值过来的

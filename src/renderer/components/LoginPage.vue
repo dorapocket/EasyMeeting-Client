@@ -2,6 +2,7 @@
   <div>
       <login-layout v-if="page=='login'"/>
       <register-layout v-if="page=='register'"/>
+      <wxlogin-layout v-if="page=='wechat'"/>
   </div>
 </template>
 <style>
@@ -27,9 +28,10 @@
 <script>
 import LoginLayout from './LoginPage/loginLayout.vue'
 import RegisterLayout from './LoginPage/registerLayout.vue'
+import WxloginLayout from './LoginPage/wxloginLayout.vue';
 
 export default {
-  components: { LoginLayout, RegisterLayout },
+  components: { LoginLayout, RegisterLayout, WxloginLayout },
   data: () => ({
     
   }),

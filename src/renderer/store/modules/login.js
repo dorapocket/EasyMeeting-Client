@@ -3,7 +3,7 @@ import { message } from "ant-design-vue";
 const { ipcRenderer } = require("electron");
 const state = {
   loginStatus:false, // 登陆状态 控制显示主页和登录页
-  loginPage:'login', // 登录页注册register和登录login显示哪个
+  loginPage:'wechat', // 登录页注册register和登录login和wechat显示哪个
 };
 
 const mutations = {
