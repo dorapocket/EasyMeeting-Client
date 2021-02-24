@@ -5,6 +5,8 @@ import App from "./App";
 import router from "./router";
 import store from "./store";
 import "ant-design-vue/dist/antd.css";
+import VueMatomo from 'vue-matomo';
+
 const { ipcRenderer } = require("electron");
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.http = Vue.prototype.$http = axios;
@@ -60,6 +62,29 @@ axios.interceptors.response.use(response => {
     return Promise.reject(error);
   }
 })
+
+
+// 跟踪代码
+let analyticsURL = ipcRenderer.sendSync("getStorageSync", "matomoAnalytics");
+if(analyticsURL){
+Vue.use(VueMatomo, {
+  host: analyticsURL,
+  siteId: 2,
+  trackerFileName: 'matomo',
+  router: router,
+  enableLinkTracking: true,
+  requireConsent: false,
+  trackInitialView: true,
+  disableCookies: false,
+  enableHeartBeatTimer: false,
+  heartBeatTimerInterval: 15,
+  // FIXME: DEBUG MDOE
+  debug: true,
+  cookieDomain: undefined,
+  domains: undefined,
+  preInitActions: []
+});
+}
 
 
 Vue.prototype.$sockets = []; // 定义socket数据结构 socket不能放到vuex中(会发生不经过mutations内容改变错误)！

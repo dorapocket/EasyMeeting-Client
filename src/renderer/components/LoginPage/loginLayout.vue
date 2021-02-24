@@ -70,6 +70,7 @@ export default {
     autoLoginCheck: false,
   }),
   mounted: function() {
+    this.$matomo && this.$matomo.trackPageView('login_with_username');
     let remember =
       ipcRenderer.sendSync("getStorageSync", "loginRemember") || {};
     let token = ipcRenderer.sendSync("getStorageSync", "UserToken") || "";
@@ -191,9 +192,11 @@ export default {
         .catch(function(error) {});
     },
     toReg: function() {
+      
       this.$store.commit("login/setLoginPage", "register");
     },
     toWechat: function() {
+      this.$matomo && this.$matomo.trackEvent('Buttons', 'Click', 'switchToWXLogin');
       this.$store.commit("login/setLoginPage", "wechat");
     },
     autoLoginChange: function(e) {

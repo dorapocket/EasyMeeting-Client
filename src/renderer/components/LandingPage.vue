@@ -28,6 +28,7 @@ export default {
   methods: {},
   mounted:function(){
     this.$store.dispatch('landingPage/getMeetingList');
+    this.$matomo && this.$matomo.trackPageView('LandingPage');
   }
 };
 </script>

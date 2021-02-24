@@ -42,6 +42,9 @@ export default {
   },
   methods:{
 
+  },
+  mounted:function(){
+    this.$matomo && this.$matomo.trackPageView('LoginPage');
   }
 }
 </script>

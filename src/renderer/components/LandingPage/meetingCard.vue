@@ -90,9 +90,11 @@ export default {
   },
   methods:{
       addMeeting:function(){
+          this.$matomo && this.$matomo.trackEvent('Buttons', 'Click', 'addMeeting', '');
           this.$store.dispatch('landingPage/openCreateMeetingModal',true);
       },
       confirmDelete:function(aid){
+        this.$matomo && this.$matomo.trackEvent('Buttons', 'Click', 'deleteMeeting', aid);
         this.$store.dispatch('landingPage/deleteMeeting',aid);
       },
       // TODO: 增加修改会议功能

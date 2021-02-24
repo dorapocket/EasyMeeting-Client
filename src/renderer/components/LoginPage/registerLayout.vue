@@ -129,5 +129,8 @@ message.error('手机号码输入有误，请重新输入');return false;
           this.$store.commit("login/setLoginPage",'login');
       }
   },
+  mounted:function(){
+    this.$matomo && this.$matomo.trackPageView('register');
+  }
 }
 </script>

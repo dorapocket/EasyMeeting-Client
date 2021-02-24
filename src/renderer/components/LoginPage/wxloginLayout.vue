@@ -55,6 +55,7 @@ export default {
     imageReady:false,
   }),
   mounted: function() {
+    this.$matomo && this.$matomo.trackPageView('login_with_wechat');
     let that = this;
     let wxSocketUrl = ipcRenderer.sendSync("getStorageSync", "wxSocketUrl");
     tm=setTimeout(function(){
@@ -89,9 +90,39 @@ export default {
         that.tipMsg="请使用微信扫描小程序码登录";
       }
     });
+    wxsocket.on("WXLOGIN_ALREADY_SCAN",function(){
+      that.tipMsg="已扫描，请在手机上确认";
+    });
+    wxsocket.on("LOGIN_RESULT",function(obj){
+      if(obj.code==200&&obj.token){
+        that.getUserInfoAndSwitch(obj.token);
+      }
+    });
   },
   methods: {
+    getUserInfoAndSwitch(token) {
+      let that = this;
+      this.$http
+        .get("/user/userInfo", {
+          params: {
+            token: token,
+          },
+        })
+        .then(function(response) {
+          if (response.data.code == 200) {
+            console.log("获取用户信息成功:", response.data.data);
+            ipcRenderer.send("setStorageSync", "UserInfo", response.data.data);
+            console.log("Login Set Token:", token);
+            that.$store.commit("login/setLoginStatus", true);
+            ipcRenderer.send("loginSuccess", token);
+          } else {
+            message.error("获取用户信息失败：" + response.data.msg);
+          }
+        })
+        .catch(function(error) {});
+    },
     toPassword: function() {
+      this.$matomo && this.$matomo.trackEvent('Buttons', 'Click', 'switchToUsernameLogin');
       this.$store.commit("login/setLoginPage", "login");
     },
     toReg: function() {

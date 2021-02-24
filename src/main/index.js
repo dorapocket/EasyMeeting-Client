@@ -50,7 +50,7 @@ function createWindow() {
   store.set("baseURL", config.baseURL || "");
   store.set("rtcServer", config.rtcServer || "");
   store.set("wxSocketUrl", config.wxSocketUrl || "");
-
+  store.set("matomoAnalytics",config.matomoAnalytics||"");
   mainWindow.loadURL(winURL);
 
   mainWindow.on("closed", () => {

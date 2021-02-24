@@ -1,6 +1,7 @@
 baseURL
 rtcServer
 wxSocketUrl
+matomoAnalytics
 loginStatus
 loginRemember:{username,autologin}
 UserToken
