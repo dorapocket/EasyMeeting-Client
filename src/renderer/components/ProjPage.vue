@@ -39,7 +39,7 @@
     </div>
     <div
       v-if="step == 3"
-      style="display: flex; flex-direction: column; height: 100%"
+      style="display: flex; flex-direction: column; height: 100%;align-items: center;justify-content: center"
     >
       <rtc-connection></rtc-connection>
     </div>

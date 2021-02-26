@@ -27,7 +27,7 @@
         src="~@/assets/error.svg"
         alt="error"
       />
-      <h2 style="text-align: center">{{ tip }}</h2>
+      <h3 style="text-align: center">{{ tip }}</h3>
       <a-button
         type="danger"
         shape="round"
@@ -40,6 +40,11 @@
     </div>
   </div>
 </template>
+<style>
+.projbigimg{
+  max-width: 150px;
+}
+</style>
 <script>
 let store;
 let $store;
@@ -47,22 +52,6 @@ let peerConnection;
 let socket;
 let transferStream = new MediaStream();
 let Screensources;
-const configuration = {
-  iceServers: [
-    {
-      urls: "turn:turn.lgyserver.top:3478?transport=udp",
-      username: "1610198274:dorapocket",
-      credential: "EJMqW3VxFEoxwwT+0p2NOwLFLBQ=",
-    },
-    {
-      urls: "turn:turn.lgyserver.top:3478?transport=tcp",
-      username: "1610198274:dorapocket",
-      credential: "EJMqW3VxFEoxwwT+0p2NOwLFLBQ=",
-    },
-    { urls: "stun:turn.lgyserver.top:3478" },
-  ],
-  iceCandidatePoolSize: 2,
-};
 export default {
   data: () => ({
     tip: "正在连接到投屏端...",
@@ -70,9 +59,6 @@ export default {
     connectionStatus: false,
   }),
   computed: {
-    tip: function () {
-      return store.connectTip;
-    },
     step3btnicon: function () {
       return this.connectionStatus ? "close" : "rollback";
     },
@@ -95,7 +81,7 @@ export default {
       let that = this;
       try {
         this.tip = "正在连接到投屏端...";
-        peerConnection = new RTCPeerConnection(configuration);
+        peerConnection = new RTCPeerConnection(this.$store.state.projPage.rtcConfig);
         peerConnection.onicecandidate = function (event) {
           console.log(event);
           if (event.candidate) {
