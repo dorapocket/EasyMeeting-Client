@@ -30,7 +30,7 @@
           >
         </a-menu-item>
         <a-sub-menu class="clickable" key="sub1">
-          <span slot="title"><a-icon type="user" /><span>管理</span></span>
+          <span slot="title"><a-icon type="appstore" /><span>管理</span></span>
           <a-menu-item key="sub1-1">
             <router-link to="/admin?type=meetingRoom">会议室管理</router-link>
           </a-menu-item>
