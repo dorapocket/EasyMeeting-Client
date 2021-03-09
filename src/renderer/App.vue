@@ -1,9 +1,10 @@
 <template>
   <div>
-    <!--FIXME: debug message
+    
     <login-page v-if="!loginStatus"></login-page>
-    <main-page v-else></main-page>-->
-    <main-page></main-page>
+    <main-page v-else></main-page>
+    <!--FIXME: debug message
+    <main-page></main-page>-->
   </div>
 </template>
 <style>

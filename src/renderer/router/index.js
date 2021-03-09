@@ -8,12 +8,12 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: require('@/components/AdminPage').default,
+      //component: require('@/components/AdminPage').default,
       meta:{
         keepAlive:true,
-      }
+      },
       // FIXME: debug message
-      //component: require('@/components/LandingPage').default
+      component: require('@/components/LandingPage').default
     },
     {
       path: '/proj',

@@ -21,7 +21,7 @@ const mutations = {
         state.screenSources=n;
     },
     setSelectScreenID(state,n){
-        state.selectScrtcreenID=n;
+        state.selectScreenID=n;
     },
     setRtcConfig(state,n){
         state.rtcConfig=n;
