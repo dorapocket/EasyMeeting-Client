@@ -14,7 +14,7 @@
                 title="接受此会议？"
                 ok-text="接受"
                 cancel-text="再想想"
-                @confirm="confirmAccept(record.key)"
+                @confirm="confirmAccept(record.index)"
               >
                 <a
                   ><a-icon style="color:green;" type="check-circle"
@@ -25,8 +25,9 @@
               <a-popconfirm
                 title="拒绝此会议？"
                 ok-text="拒绝"
+                okType="danger"
                 cancel-text="再想想"
-                @confirm="confirmReject(record.key)"
+                @confirm="openReasonModal(record.index)"
               >
                 <a><a-icon style="color:red;" type="stop"/></a>
               </a-popconfirm>
@@ -35,7 +36,7 @@
         </a-card>
       </a-col>
     </a-row>
-    <a-modal v-model="moreVisible" title="详细信息" @ok="handleOk">
+    <a-modal v-model="moreVisible" title="详细信息" @cancel="moreClose" @ok="moreClose" okText="确定" cancelText="取消">
       <a-descriptions  layout="vertical" size="small" bordered :column="6">
     <a-descriptions-item label="主题" :span="2">
       {{moreObj.theme}}
@@ -59,6 +60,9 @@
       {{moreObj.extra}}
     </a-descriptions-item>
   </a-descriptions>
+    </a-modal>
+      <a-modal v-model="reasonModalVisible" title="拒绝理由" @ok="handleReasonOk" @cancel="handleReasonCancel" okText="拒绝" okType="danger" cancelText="取消">
+      <a-input placeholder="请输入拒绝理由" v-model="replyText"/>
     </a-modal>
   </div>
 </template>
@@ -92,6 +96,7 @@
 }
 </style>
 <script>
+import { message } from 'ant-design-vue';
 const columns = [
   {
     title: "主题",
@@ -116,44 +121,65 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-      index:0,
-    key: "1",
-    theme:"TextVQA组会",
-    sponsor:"李国宇",
-    members:"李国宇，李国宇，李国宇，李国宇，李国宇",
-    date:"2020-01-01",
-    time:"00:00 - 01:00",
-    datetime:'2020-01-01 00:00 - 01:00',
-    extra:"无",
-    meetingRoom:'大会议室（6教北）',
-    content:
-      "内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容",
-  },
- 
-];
 export default {
   data: () => ({
-    data,
     columns,
     moreVisible:false,
     moreObj:{},
+    replyText:'',
+    replyID:-1,
+    reasonModalVisible:false,
   }),
+  computed:{
+    data:function(){
+      return this.$store.state.messages.msgData
+    }
+  },
   methods:{
-      confirmAccept:function(key){
-          console.log(key);
+      openReasonModal:function(idx){
+        this.replyID=idx;
+        this.reasonModalVisible=true;
       },
-      confirmReject:function(key){
-
+      confirmAccept:function(idx){
+        let that=this;
+        this.$store.dispatch("messages/sendFeedBack",{
+          msgId:that.data[idx].key,
+          type:"MEETING_NOTICE",
+          fb:"CONFIRM",
+          reply:""
+        });
+      },
+      confirmReject:function(idx,reason){
+        let that=this;
+        this.$store.dispatch("messages/sendFeedBack",{
+          msgId:that.data[idx].key,
+          type:"MEETING_NOTICE",
+          fb:"REJECT",
+          reply:reason
+        });
       },
       showMore:function(index){
-
-this.moreObj=data[index];this.moreVisible=true;
+this.moreObj=this.data[index];this.moreVisible=true;
       },
-      handleOk:function(){
-
+      moreClose:function(){
+        this.moreVisible=false;
+      },
+      handleReasonOk:function(){
+        if(this.replyText==""){
+          message.error("拒绝理由不能为空！");
+        }else{
+          this.reasonModalVisible=false;
+          this.confirmReject(this.replyID,this.replyText);
+        }
+      },
+      handleReasonCancel:function(){
+        this.reasonModalVisible=false;
+        this.replyText="";
+        this.replyID=-1;
       }
+  },
+  beforeMount:function(){
+    this.$store.dispatch("messages/getMeetingMsgSync");
   }
 };
 </script>
