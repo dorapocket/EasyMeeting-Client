@@ -4,11 +4,15 @@ const Utils=require('../../utils/utils.js');
 const util=new Utils();
 const state = {
     meetingRoomData:[],
+    deviceData:[],
   }
   
   const mutations = {
     setMeetingRoomData (state,data) {
       state.meetingRoomData=data;
+    },
+    setDeviceData (state,data) {
+      state.deviceData=data;
     },
   }
   
@@ -57,7 +61,41 @@ const state = {
             }
         })
         .catch(function(e){console.error(e);})
-    }
+    },
+    getAdminDevices ({ commit }) {
+      let result=[];
+      let idx=0;
+      axios.get("/device/getAllDevice",{})
+    .then(function(response){
+      let a=response.data.data;
+      for(let b of a){
+          result.push(
+            {
+              index:idx,
+              key: b.did, // msgid
+              name:b.mname,
+              extra:b.extra,
+              ctime:b.createTime,
+              pos:b.mpos,
+            }
+          );
+          idx++;
+      }
+      commit('setDeviceData',result);
+    })
+    .catch(function(error){
+      console.error(error);
+    })
+    },
+    deleteDevice({commit,dispatch},fb){
+      axios.get('/device/deleteDevice',{params:{did:fb}})
+        .then(function(response){
+          if(response.data.code==200){
+            dispatch('getAdminDevices');
+          }
+        })
+        .catch(function(e){console.error(e);})
+      },
   }
   
   export default {
