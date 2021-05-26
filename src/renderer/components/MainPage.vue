@@ -2,7 +2,7 @@
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
       <div class="main-avatar">
-        <a-avatar :size="40" icon="user" />
+        <a-avatar src="https://lgyserver.top/avatar.jpeg" />
         <div style="margin-left: 10px" v-show="!namedisplay">
           <div style="color: white">{{username}}</div>
           <div style="color: white">{{realname}}</div>
