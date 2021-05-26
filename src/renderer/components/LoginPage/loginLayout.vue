@@ -1,5 +1,6 @@
 <template>
   <a-layout class="login-layout" style="height:100vh;">
+    
     <a-layout-header style="line-height:1.5;padding:40px 50px;height:auto;">
       <div class="login-text" id="logo">EasyMeeting 会易</div>
       <div class="login-text" id="vers">v1.0</div></a-layout-header

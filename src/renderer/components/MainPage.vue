@@ -31,10 +31,10 @@
         </a-menu-item>
         <a-sub-menu class="clickable" key="sub1">
           <span slot="title"><a-icon type="appstore" /><span>管理</span></span>
-          <a-menu-item key="sub1-1">
+          <a-menu-item class="clickable" key="sub1-1">
             <router-link to="/admin?type=meetingRoom">会议室管理</router-link>
           </a-menu-item>
-          <a-menu-item key="sub1-2">
+          <a-menu-item class="clickable" key="sub1-2">
             <router-link to="/admin?type=device">设备管理</router-link>
           </a-menu-item>
         </a-sub-menu>

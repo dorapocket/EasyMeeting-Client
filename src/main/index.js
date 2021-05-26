@@ -27,8 +27,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     height: 450,//563
     useContentSize: true,
-    //titleBarStyle: 'customButtonsOnHover',
-    //frame:false,
+    titleBarStyle: 'customButtonsOnHover',
+    frame:false,
     width: 300,//1000
     maximizable: false,
     webPreferences: {
@@ -109,4 +109,12 @@ ipcMain.on("loginSuccess",(event,token)=>{
   store.set("loginStatus", true);
   store.set('UserToken',token);
   mainWindow.setSize(1000,600,true)
+})
+ipcMain.on('quitApp', (event) => {
+  app.quit();
+})
+ipcMain.on('minApp', (event) => {
+  if (mainWindow && !mainWindow.isDestroyed()){
+      mainWindow.minimize();
+  }
 })

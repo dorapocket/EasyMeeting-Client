@@ -27,12 +27,7 @@
               text
             }}</span>
             <span slot="action" slot-scope="text, record">
-              <a>
-                <a-icon
-                  type="exclamation-circle"
-                  @click="showMore(record.index)"
-                /> </a
-              ><a-divider type="vertical" />
+
               <a-popconfirm
                 title="删除设备？"
                 ok-text="删除"

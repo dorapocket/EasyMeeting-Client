@@ -75,7 +75,7 @@ const state = {
               key: b.did, // msgid
               name:b.mname,
               extra:b.extra,
-              ctime:b.createTime,
+              ctime:util.dateFormat(new Date(b.createTime),'yyyy年MM月dd日 hh:mm'),
               pos:b.mpos,
             }
           );
