@@ -10,6 +10,7 @@
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
+    "build:win": "node .electron-vue/build.js && electron-builder --win",
     "dev": "node .electron-vue/dev-runner.js",
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
@@ -18,9 +19,21 @@
   },
   "build": {
     "productName": "easymeeting-client",
+    "copyright":"Copyright Dorapocket 2020",
     "appId": "com.dorapocket.easymeeting",
     "directories": {
       "output": "build"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icons/icon.ico",
+      "uninstallerIcon": "build/icons/icon.ico",
+      "installerHeaderIcon": "build/icons/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "EasyMeeting"
     },
     "files": [
       "dist/electron/**/*"
@@ -41,10 +54,20 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/icon.ico"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "artifactName": "EasyMeeting_Client_Setup_${platform}_${arch}_latest.${ext}",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32",
+            "x64"
+          ]
+        }
+      ]
     },
     "linux": {
       "icon": "build/icons"
@@ -61,7 +84,6 @@
     "vue-electron": "^1.0.6",
     "vue-matomo": "^3.14.0-0",
     "vue-router": "^3.0.1",
-    "vue-socket.io": "^3.0.10",
     "vuex": "^3.0.1",
     "vuex-electron": "^1.0.0"
   },

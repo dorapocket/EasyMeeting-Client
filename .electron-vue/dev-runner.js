@@ -73,7 +73,7 @@ function startRenderer () {
       }
     )
 
-    server.listen(9080)
+    server.listen(9090)
   })
 }
 
@@ -115,7 +115,7 @@ function startMain () {
 
 function startElectron () {
   var args = [
-    '--inspect=5858',
+    '--inspect=5859',
     path.join(__dirname, '../dist/electron/main.js')
   ]
 

@@ -74,6 +74,7 @@ export default {
     socket = this.$sockets['rtc'];
     transferStream = new MediaStream();
     Screensources = store.screenSources;
+    console.log("Screen "+store.selectScreenID+' will be record');
     await this.connectRTC(store.selectScreenID);
   },
   methods: {

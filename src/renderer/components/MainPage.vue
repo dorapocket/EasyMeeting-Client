@@ -23,7 +23,22 @@
           >
         </a-menu-item>
 
-        <a-menu-item class="clickable" key="3"
+<a-menu-item class="clickable" key="3"
+          ><router-link to="/message">
+            <a-icon type="message" />
+            <span>通知</span></router-link
+          >
+        </a-menu-item>
+        <a-sub-menu class="clickable" key="sub1">
+          <span slot="title"><a-icon type="appstore" /><span>管理</span></span>
+          <a-menu-item class="clickable" key="sub1-1">
+            <router-link to="/admin?type=meetingRoom">会议室管理</router-link>
+          </a-menu-item>
+          <a-menu-item class="clickable" key="sub1-2">
+            <router-link to="/admin?type=device">设备管理</router-link>
+          </a-menu-item>
+        </a-sub-menu>
+        <a-menu-item class="clickable" key="4"
           ><router-link to="/settings">
             <a-icon type="setting" />
             <span>设置</span></router-link
@@ -40,9 +55,7 @@
         />
       </a-layout-header>
       <a-layout-content>
-        <keep-alive>
           <router-view></router-view>
-        </keep-alive>
       </a-layout-content>
     </a-layout>
   </a-layout>
