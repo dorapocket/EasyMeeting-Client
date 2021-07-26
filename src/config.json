@@ -1,6 +1,6 @@
 {
-    "baseURL":"https://lgyserver.top:65534",
-    "rtcServer":"https://lgyserver.top:65534/rtc",
-    "wxSocketUrl":"https://lgyserver.top:65534/wxscanlogin",
-    "matomoAnalytics":"https://analytics.lgyserver.top/"
+    "baseURL":"https://yourserver:port",
+    "rtcServer":"https://yourserver:port/rtc",
+    "wxSocketUrl":"https://yourserver:port/wxscanlogin",
+    "matomoAnalytics":"https://yourAnalyticsServer"
 }

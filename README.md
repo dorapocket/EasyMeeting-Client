@@ -18,6 +18,12 @@ Easymeeting supports various functions such as conference room creation and mana
 本工程是客户端部分代码。
 This project is part of the client code.
 
+若要使用，请：
+- 修改src/config.json为你的服务器地址
+
+To use, please:
+- Change src/config.json to your server address
+
 支持功能 Support functions: 
 - [x]  用户登录和注册 User login and registration
 - [x]  小程序扫码登陆 Miniprogram scan code login
@@ -27,9 +33,9 @@ This project is part of the client code.
 - [x]  多系统支持（Mac、Win、Linux）Multi-system support
 - [x]  会议室管理 Conference room management
 - [x]  设备管理 Device management
-- [ ]  设备绑定（小程序实现）Device binding (applet implementation)
-- [ ]  会议签到（小程序实现）Meeting check-in (applet implementation)
-- [ ]  会议室抢占（小程序实现）Meeting room preemption (small program implementation)
+- [ ]  设备绑定（小程序实现）Device binding (miniprogram implementation)
+- [ ]  会议签到（小程序实现）Meeting check-in (miniprogram implementation)
+- [ ]  会议室抢占（小程序实现）Meeting room preemption (miniprogram implementation)
 - [x]  会议邀请处理 Meeting invitation processing
 - [ ]  设置 Settings
 
@@ -71,10 +77,10 @@ Welcome to submit PR or better idea!
 yarn install
 
 # serve with hot reload at localhost:9080
-npm run dev
+yarn run dev
 
 # build electron application for production
-npm run build
+yarn run build
 
 #build windows exe
 yarn run build:win
