@@ -1,6 +1,10 @@
-# Easymeeting-Client
+<div align= "center">
+<img align="center" src="screenshots/meetingroom.png" />
+<h2 align="center" style="">EasyMeeting</h2>
+<h3 align="center" style="">Wechat Miniprogram</h3>
+<br/><br/>
+</div>
 
-> EasyMeeting-Client 会易 智能会议室管理系统 V1.0
 
 ## About Easymeeting
 
